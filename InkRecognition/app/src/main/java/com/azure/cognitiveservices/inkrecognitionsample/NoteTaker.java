@@ -24,7 +24,11 @@ import com.microsoft.azure.cognitiveservices.inkrecognizer.model.InkRecognitionR
 import com.microsoft.azure.cognitiveservices.inkrecognizer.model.InkWord;
 import reactor.core.publisher.Mono;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NoteTaker extends View {
 
@@ -40,8 +44,24 @@ public class NoteTaker extends View {
     // <setPropertiesForNoteTaker>
     public NoteTaker(Context context) throws Exception {
         super(context);
+
+        InputStream is = null;
+        BufferedReader br = null;
+        String str;
         String appKey = "<SUBSCRIPTION_KEY>";
         String destinationUrl = "https://api.cognitive.microsoft.com/inkrecognizer";
+        try {
+            is = context.getAssets().open("Account.txt");
+            br = new BufferedReader(new InputStreamReader(is));
+            str = br.readLine();
+            appKey = str.split("=")[1];
+            str = br.readLine();
+            destinationUrl = str.split("=")[1];
+        } finally {
+            if (is != null)  is.close();
+            if (br != null)  br.close();
+        }
+
         displayMetrics = getResources().getDisplayMetrics();
         inkRecognizerAsyncClient = new InkRecognizerClientBuilder()
                 .credentials(new InkRecognizerCredentials(appKey))
