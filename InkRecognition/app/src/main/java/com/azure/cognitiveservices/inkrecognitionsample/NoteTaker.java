@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class NoteTaker extends View {
 
@@ -36,6 +37,7 @@ public class NoteTaker extends View {
     private final Paint brush = new Paint();
     private InkStrokeImplementor stroke;
     private final InkRecognizerAsyncClient inkRecognizerAsyncClient;
+    private final String language;
     private CountDownTimer analysisTimer = null;
     private final ArrayList<InkStroke> strokes = new ArrayList<>();
     private static final String TAG = "InkRecognizer";
@@ -62,15 +64,18 @@ public class NoteTaker extends View {
             if (br != null)  br.close();
         }
 
+        language = Locale.getDefault().toLanguageTag();
+
         displayMetrics = getResources().getDisplayMetrics();
         inkRecognizerAsyncClient = new InkRecognizerClientBuilder()
                 .credentials(new InkRecognizerCredentials(appKey))
                 .endpoint(destinationUrl)
                 // You can also set this to ApplicationKind.WRITING or ApplicationKind.DRAWING
                 // if you know the expected type of ink content
-                .applicationKind(ApplicationKind.MIXED)
+                //.applicationKind(ApplicationKind.MIXED)
+                .applicationKind(ApplicationKind.WRITING)
                 // You can set the language here if you know the expected language
-                .language("en-US")
+                .language(language)
                 .buildAsyncClient();
         brush.setAntiAlias(true);
         brush.setColor(Color.BLACK);
@@ -177,7 +182,7 @@ public class NoteTaker extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
-                stroke = new InkStrokeImplementor();
+                stroke = new InkStrokeImplementor(language);
                 stroke.addPoint(x, y, displayMetrics);
                 cancelTimer();
                 return true;

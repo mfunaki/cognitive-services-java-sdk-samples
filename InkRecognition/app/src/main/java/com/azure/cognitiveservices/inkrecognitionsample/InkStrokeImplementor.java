@@ -19,9 +19,9 @@ class InkStrokeImplementor implements InkStroke {
     private static final float INCH_TO_MM = 25.4f;
 
     // <createInkStroke>
-    InkStrokeImplementor() {
+    InkStrokeImplementor(String language) {
         this.strokeId = getNextNum();
-        this.language = "en-US";
+        this.language = language;
         this.kind = InkStrokeKind.UNKNOWN;
     }
     // </createInkStroke>
