@@ -72,8 +72,7 @@ public class NoteTaker extends View {
                 .endpoint(destinationUrl)
                 // You can also set this to ApplicationKind.WRITING or ApplicationKind.DRAWING
                 // if you know the expected type of ink content
-                //.applicationKind(ApplicationKind.MIXED)
-                .applicationKind(ApplicationKind.WRITING)
+                .applicationKind(ApplicationKind.MIXED)
                 // You can set the language here if you know the expected language
                 .language(language)
                 .buildAsyncClient();
